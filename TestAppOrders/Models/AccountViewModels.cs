@@ -49,6 +49,9 @@ namespace TestAppOrders.Models
     public class LoginViewModel
     {
         [Required]
+        public string Name { get; set; }
+
+        [Required]
         [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }
@@ -64,6 +67,9 @@ namespace TestAppOrders.Models
 
     public class RegisterViewModel
     {
+        [Required]
+        public string Name { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

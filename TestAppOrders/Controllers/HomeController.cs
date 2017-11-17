@@ -1,4 +1,5 @@
 ﻿using Ninject;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,11 +19,17 @@ namespace TestAppOrders.Controllers
         public HomeController(IRepository r)
         {
             repo = r;
+
+            //INSERT TEST DATA IN DATABASE
+            //repo.RemoveData();
+            //repo.CreateTestData();
         }
         
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(repo.List());
+            int pageSize = 11;
+            int pageNumber = (page ?? 1);
+            return View(repo.List().ToPagedList(pageNumber, pageSize));
         }
 
         [HttpGet]
@@ -33,7 +40,7 @@ namespace TestAppOrders.Controllers
             {
                 return HttpNotFound();
             }
-            return View(order);
+            return PartialView("Edit",order);
         }
 
         [HttpPost]
@@ -55,24 +62,16 @@ namespace TestAppOrders.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            return PartialView();
         }
 
         [HttpPost]
-        public ActionResult Create(Order o)
+        [ValidateAntiForgeryToken()]
+        public ActionResult Create(Order order)
         {
+            if (!ModelState.IsValid) return View(order);
+
             var context = new OrderContext();
-            if (!ModelState.IsValid) return View(o);
-
-            Order order = new Order()
-            {
-                Number = o.Number,
-                CreateDate = o.CreateDate,
-                EndDate = o.EndDate,
-                Manager = o.Manager,
-                Annotation = o.Annotation
-            };
-
             context.Orders.Add(order);
             context.SaveChanges();
             return RedirectToAction("Index");

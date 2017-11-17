@@ -1,4 +1,5 @@
-﻿@model List<TestAppOrders.Models.Order>
+﻿@model PagedList.IPagedList<TestAppOrders.Models.Order>
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Index";
@@ -6,10 +7,13 @@
 }
 
 <h2>Orders</h2>
-
+<div id="Dialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", "Home", new { }, new { @onclick = "EditClickHandler(event, this)" })
 </p>
+
 <table class="table">
     <tr>
         <th>
@@ -31,6 +35,7 @@
     </tr>
 
 @foreach (var item in Model) {
+
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Number)
@@ -48,10 +53,31 @@
             @Html.DisplayFor(modelItem => item.Annotation)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @onclick = "EditClickHandler(event, this)" } ) |
             @Html.ActionLink("Delete", "Delete", new { id=item.Id })
         </td>
     </tr>
 }
-
 </table>
+
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
+@section scripts
+{
+    <script type="text/javascript">
+
+            function EditClickHandler(event, element) {
+                $.ajaxSetup({ cache: false });
+                event.preventDefault();
+                $.get(element.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#Dialog').modal('show');
+                });
+            }
+       
+    </script>
+}
