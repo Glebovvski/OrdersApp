@@ -3,7 +3,7 @@
 <div class="modal-content">
     <div class="modal-header">
         <button class="close" data-dismiss="modal" area-hidden="true">X</button>
-        @using (Html.BeginForm())
+        @using (Ajax.BeginForm("Edit", new AjaxOptions { UpdateTargetId="tab", HttpMethod = "POST" }))
         {
             @Html.AntiForgeryToken()
             <div class="modal-body">

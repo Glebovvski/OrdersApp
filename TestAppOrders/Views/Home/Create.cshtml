@@ -2,7 +2,7 @@
 
 <div class="modal-content">
     <div class="modal-header">
-        @using (Html.BeginForm())
+        @using (Ajax.BeginForm("Create", new AjaxOptions { UpdateTargetId = "tab", HttpMethod="POST"}))
         {
             @Html.AntiForgeryToken()
             <div class="modal-body">

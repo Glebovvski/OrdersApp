@@ -13,11 +13,13 @@ namespace TestAppOrders.Models
 
         [MaxLength(50)]
         public string Number { get; set; }
-        [DataType(DataType.Date)]
+
+        //[DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Creation Date")]
         public DateTime CreateDate { get; set; }
-        [DataType(DataType.Date)]
+
+        //[DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Evaluation Date")]
         public DateTime EndDate { get; set; }

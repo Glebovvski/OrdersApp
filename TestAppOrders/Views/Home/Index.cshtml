@@ -10,11 +10,32 @@
 <div id="Dialog" class="modal fade">
     <div id="dialogContent" class="modal-dialog"></div>
 </div>
-<p>
-    @Html.ActionLink("Create New", "Create", "Home", new { }, new { @onclick = "EditClickHandler(event, this)" })
-</p>
+<div class="row">
+    <div class="col-md-2">
+        <p>
+            @Html.ActionLink("Create New", "Create", "Home", new { }, new { @onclick = "EditClickHandler(event, this)" })
+        </p>
+    </div>
 
-<table class="table">
+    <div class="col-md-4 col-md-offset-6">
+        <select id="list">
+            <option id="listtype"  value="Number">Number</option>
+            <option id="listtype"  value="Manager">Manager</option>
+            <option id="listtype"  value="Annotation">Annotation</option>
+        </select>
+        @{
+            var options = new AjaxOptions()
+            {
+                UpdateTargetId = "tab",
+                HttpMethod = "GET",
+            };
+        }
+        : <input type="text" value="" id="search" class="text-info" placeholder="e.g. Ivanov" />
+        @Ajax.ActionLink("OK", "Filter", new { search = "searchValue", type = "typeValue" }, options, new { @class = "btn btn-success link type" })
+    </div>
+</div>
+<br />
+<table class="table table-hover" id="tab">
     <tr>
         <th>
             @Html.Label("Number")
@@ -70,6 +91,15 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 {
     <script type="text/javascript">
 
+        $(function () {
+            $('.link').click(function () {
+                var search = $("#search").val();
+                var type = $("#list option:selected").val();
+                this.href = this.href.replace("searchValue", search);
+                this.href = this.href.replace("typeValue", type);
+            });
+        });
+           
             function EditClickHandler(event, element) {
                 $.ajaxSetup({ cache: false });
                 event.preventDefault();
