@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TestAppOrders.Models;
@@ -29,7 +30,8 @@ namespace TestAppOrders.Controllers
         {
             int pageSize = 5;
             int pageNumber = (page ?? 1);
-            return View(repo.List().ToPagedList(pageNumber, pageSize));
+            var orders = repo.List().ToPagedList(pageNumber, pageSize);
+            return View(orders);
         }
 
         
@@ -51,9 +53,9 @@ namespace TestAppOrders.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            var order = repo.Get(id);
+            var order = await repo.Get(id);
             if (order == null)
             {
                 return HttpNotFound();
@@ -63,7 +65,7 @@ namespace TestAppOrders.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public ActionResult Edit([Bind(Include = "Id, Number, CreateDate, EndDate, Manager, Annotation")]Order order)
+        public async Task<ActionResult> Edit([Bind(Include = "Id, Number, CreateDate, EndDate, Manager, Annotation")]Order order)
         {
             var context = new OrderContext();
 
@@ -73,7 +75,7 @@ namespace TestAppOrders.Controllers
             }
 
             context.Entry(order).State = EntityState.Modified;
-            context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -85,13 +87,13 @@ namespace TestAppOrders.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public ActionResult Create(Order order)
+        public async Task<ActionResult> Create(Order order)
         {
             if (!ModelState.IsValid) return View(order);
 
             var context = new OrderContext();
             context.Orders.Add(order);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

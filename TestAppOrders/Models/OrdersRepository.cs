@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.ModelBinding;
 using System.Web.Mvc;
@@ -12,14 +13,14 @@ namespace TestAppOrders.Models
     {
         private OrderContext context = new OrderContext();
 
-        public void Save(Order order)
+        public async void Save(Order order)
         {
             if (order == null)
             {
                 throw new NullReferenceException();
             }
             context.Orders.Add(order);
-            context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public IEnumerable<Order> List()
@@ -27,9 +28,9 @@ namespace TestAppOrders.Models
             return context.Orders.ToList();
         }
 
-        public Order Get(int id)
+        public async Task<Order> Get(int id)
         {
-            var order = context.Orders.Find(id);
+            var order = await context.Orders.FindAsync(id);
             return order;
         }
 
