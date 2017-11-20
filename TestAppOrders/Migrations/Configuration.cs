@@ -10,7 +10,6 @@ namespace TestAppOrders.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(TestAppOrders.Models.OrderContext context)
