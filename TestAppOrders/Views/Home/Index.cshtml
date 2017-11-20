@@ -18,10 +18,10 @@
     </div>
 
     <div class="col-md-4 col-md-offset-6">
-        <select id="list">
-            <option id="listtype"  value="Number">Number</option>
-            <option id="listtype"  value="Manager">Manager</option>
-            <option id="listtype"  value="Annotation">Annotation</option>
+        <select id="list" class="form-group">
+            <option id="listtype"class="form-control"  value="Number">Number</option>
+            <option id="listtype"class="form-control"  value="Manager">Manager</option>
+            <option id="listtype"class="form-control"  value="Annotation">Annotation</option>
         </select>
         @{
             var options = new AjaxOptions()
@@ -76,7 +76,7 @@
         <td>
             
             @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @onclick = "EditClickHandler(event, this)" } ) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id }, new { @onclick = "EditClickHandler(event, this)" })
         </td>
     </tr>
 }

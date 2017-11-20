@@ -37,7 +37,7 @@ namespace TestAppOrders.Controllers
         
         public ActionResult Filter(int? page, string search, string type)
         {
-            int pageSize = 5;
+            int pageSize = 10;
             int pageNumber = (page ?? 1);
             
             var filteredList = new List<Order>();
@@ -48,7 +48,6 @@ namespace TestAppOrders.Controllers
             
             else if (type.Contains("Annotation")) filteredList = repo.List().Where(x => x.Annotation.ToLower().Contains(search)).ToList();
 
-            
             return View("Index",filteredList.ToPagedList(pageNumber, pageSize));
         }
 
@@ -65,17 +64,14 @@ namespace TestAppOrders.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public async Task<ActionResult> Edit([Bind(Include = "Id, Number, CreateDate, EndDate, Manager, Annotation")]Order order)
+        public ActionResult Edit([Bind(Include = "Id, Number, CreateDate, EndDate, Manager, Annotation")]Order order)
         {
-            var context = new OrderContext();
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return HttpNotFound();
+                repo.Edit(order); 
             }
+            else return HttpNotFound();
 
-            context.Entry(order).State = EntityState.Modified;
-            await context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -87,14 +83,29 @@ namespace TestAppOrders.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public async Task<ActionResult> Create(Order order)
+        public ActionResult Create(Order order)
         {
             if (!ModelState.IsValid) return View(order);
+            else repo.Create(order);
 
-            var context = new OrderContext();
-            context.Orders.Add(order);
-            await context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
 
+        [HttpGet]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var order = await repo.Get(id);
+            if (order == null) return HttpNotFound();
+            return PartialView(order);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            if (ModelState.IsValid) repo.Delete(id);
+            else return HttpNotFound();
             return RedirectToAction("Index");
         }
 

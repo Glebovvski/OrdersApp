@@ -34,6 +34,26 @@ namespace TestAppOrders.Models
             return order;
         }
 
+        public void Edit(Order order)
+        {
+            context.Entry(order).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+
+        public void Create(Order order)
+        {
+            var context = new OrderContext();
+            context.Orders.Add(order);
+            context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var order = context.Orders.Find(id);
+            context.Orders.Remove(order);
+            context.SaveChanges();
+        }
+
         public void RemoveData()
         {
             var orders = context.Orders;

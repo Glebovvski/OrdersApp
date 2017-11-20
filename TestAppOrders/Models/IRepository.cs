@@ -11,6 +11,9 @@ namespace TestAppOrders.Models
         void Save(Order o);
         IEnumerable<Order> List();
         Task<Order> Get(int id);
+        void Edit(Order order);
+        void Create(Order order);
+        void Delete(int id);
         void RemoveData();
         void CreateTestData();
     }

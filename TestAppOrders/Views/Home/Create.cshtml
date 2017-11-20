@@ -2,12 +2,13 @@
 
 <div class="modal-content">
     <div class="modal-header">
+        <button class="close" data-dismiss="modal" area-hidden="true">X</button>
         @using (Ajax.BeginForm("Create", new AjaxOptions { UpdateTargetId = "tab", HttpMethod="POST"}))
         {
             @Html.AntiForgeryToken()
             <div class="modal-body">
                 <div class="form-horizontal">
-                    <h4>Order</h4>
+                    <h4>New Order</h4>
                     <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
@@ -52,7 +53,8 @@
 
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Create" class="btn btn-default" />
+                            <input type="submit" value="Create" class="btn btn-default" /> |
+                            @Html.ActionLink("Back to List", "Index")
                         </div>
                     </div>
                 </div>
@@ -60,9 +62,6 @@
                 }
         </div>
     </div>
-                <div>
-                    @Html.ActionLink("Back to List", "Index")
-                </div>
 
                 @section Scripts {
                     @Scripts.Render("~/bundles/jqueryval")
